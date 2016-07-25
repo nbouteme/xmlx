@@ -32,19 +32,20 @@ t_image *xmlx_new_image(int width, int height, int format)
 	return (ret);
 }
 
+void xmlx_set_win_callbacks(t_xmlx_window *win);
+
 t_xmlx_window *xmlx_new_window(int width, int height,
 							   const char *name, int fb_format)
 {
-	t_xmlx_window *ret = malloc(sizeof(*ret));
+	t_xmlx_window *ret = calloc(1, sizeof(*ret));
 
 	ret->internal_window = glfwCreateWindow(width, height, name, NULL, NULL);
+	glfwSetWindowUserPointer(ret->internal_window, ret);
+	xmlx_set_win_callbacks(ret);
 	xmlx_bind_window(ret);
 	if (!ctx->init)
 	{
-		if(!gladLoadGL()) {
-			printf("Something went wrong!\n");
-			exit(-1);
-		}
+		gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
 		ctx->mesh = gen_screen();
 		ctx->shader = gen_shader();
 	}
