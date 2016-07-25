@@ -36,7 +36,10 @@ void xmlx_destroy()
 	int i = 0;
 
 	while (i < ctx->windows->size)
-		free_window(data[i++]);
+	{
+		xmlx_destroy_window(data[i]);
+		data[i++] = 0;
+	}
 	glDeleteShader(ctx->shader.vsh);
 	glDeleteShader(ctx->shader.fsh);
 	glDeleteProgram(ctx->shader.prog);

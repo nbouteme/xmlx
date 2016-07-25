@@ -1,3 +1,13 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "xmlx.h"
+#include "xmlx_int.h"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+extern t_mlx_ctx *ctx;
+extern t_xmlx_window *curr_win;
 
 void xmlx_bind_window(t_xmlx_window *win)
 {
@@ -58,10 +68,13 @@ void xmlx_present(t_xmlx_window *win)
 	glfwSwapBuffers(win ? win->internal_window : curr_win->internal_window);
 }
 
-void free_window(t_xmlx_window *win)
+void xmlx_destroy_window(t_xmlx_window *win)
 {
-	glfwDestroyWindow(win->internal_window);
-	free(win->framebuffer->buffer);
-	free(win->framebuffer);
-	glDeleteTextures(1, &win->framebuffer->tex_id);
+	if (win)
+	{
+		glfwDestroyWindow(win->internal_window);
+		free(win->framebuffer->buffer);
+		free(win->framebuffer);
+		glDeleteTextures(1, &win->framebuffer->tex_id);
+	}
 }
