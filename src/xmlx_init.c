@@ -33,7 +33,7 @@ void xmlx_run_window(t_xmlx_window *win, t_callback cb, void *user_ptr)
 void xmlx_destroy()
 {
 	t_xmlx_window **data = ctx->windows->data;
-	int i = 0;
+	unsigned i = 0;
 
 	while (i < ctx->windows->size)
 	{

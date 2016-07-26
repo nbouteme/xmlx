@@ -4,6 +4,7 @@
 void win_key_input(GLFWwindow* win, int key, int scancode, int action, int mods)
 {
 	t_xmlx_window *self = glfwGetWindowUserPointer(win);
+	(void)scancode;
 	if (self->on_key)
 		self->on_key(self, key, action, mods);
 }
