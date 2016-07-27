@@ -1,7 +1,7 @@
 NAME = xmlx
 TYPE = lib
 
-CFLAGS = -Wall -Wextra -Werror -O3 -Iinclude
+CFLAGS = -Wall -Wextra -Werror -g -Iinclude
 MODULES = src
 
 INCLUDE_DIRS = $(PKG_DIR)/includes

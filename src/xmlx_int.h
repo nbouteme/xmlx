@@ -1,5 +1,5 @@
 #ifndef XMLX_INT_H
-# define XMLX_INT_X
+# define XMLX_INT_H
 
 # include "xmlx.h"
 # include "vector.h"

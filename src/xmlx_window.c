@@ -39,13 +39,18 @@ t_xmlx_window *xmlx_new_window(int width, int height,
 {
 	t_xmlx_window *ret = calloc(1, sizeof(*ret));
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	ret->internal_window = glfwCreateWindow(width, height, name, NULL, NULL);
 	glfwSetWindowUserPointer(ret->internal_window, ret);
 	xmlx_set_win_callbacks(ret);
 	xmlx_bind_window(ret);
 	if (!ctx->init)
 	{
-		gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
+		if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+			exit(42);
 		ctx->mesh = gen_screen();
 		ctx->shader = gen_shader();
 	}

@@ -7,7 +7,7 @@
 
 
 const char *vshader =
-	"#version 130\n"
+	"#version 150\n"
 	"in vec2 position;\n"
 	"in vec2 itexco;\n"
 	"out vec2 otexco;\n"
@@ -18,7 +18,7 @@ const char *vshader =
 	"}\n";
 
 const char *fshader =
-	"#version 130\n"
+	"#version 150\n"
 	"in vec2 otexco;\n"
 	"out vec4 ocol;\n"
 	"uniform sampler2D tex;\n"
@@ -84,7 +84,7 @@ t_mesh gen_screen()
 		-1.0f,	1.0f, 0.0f, 0.0f,
 		1.0f,	1.0f, 1.0f, 0.0f,
 		1.0f, -1.0f, 1.0f, 1.0f,
-		-1.0f, -1.0f, 0.0f, 1.0f 
+		-1.0f, -1.0f, 0.0f, 1.0f
 	};
     GLuint elements[] = {
         0, 1, 2,
@@ -97,6 +97,6 @@ t_mesh gen_screen()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     glGenBuffers(1, &ret.ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ret.ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);	
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 	return (ret);
 }
