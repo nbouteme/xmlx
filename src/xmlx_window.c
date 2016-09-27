@@ -20,11 +20,18 @@ t_image *xmlx_new_image(int width, int height, int format)
 	unsigned long buf_size;
 
 	t_image *ret = malloc(sizeof(*ret));
-	buf_size = width * height * 4 * format;
+	buf_size = width * height;
+	if (format == INTEGER || format == FLOAT3)
+		buf_size *= 3;
+	else
+		buf_size *= 4;
+	if (format == FLOAT3 || format == FLOAT4)
+		buf_size *= 4;
 	ret->buffer = memset(malloc(buf_size), 0, buf_size);
-	ret->type = format == 1 ? GL_UNSIGNED_BYTE : GL_FLOAT;
+	ret->type = format == INTEGER ? GL_UNSIGNED_BYTE : GL_FLOAT;
 	ret->width = width;
 	ret->height = height;
+	ret->format = format;
 	glGenTextures(1, &ret->tex_id);
 	glBindTexture(GL_TEXTURE_2D, ret->tex_id);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -59,28 +66,40 @@ t_xmlx_window *xmlx_new_window(int width, int height,
 	return (ret);
 }
 
+void xmlx_draw(t_xmlx_window *win)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, win->framebuffer->tex_id);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glfwSwapBuffers(win ? win->internal_window : curr_win->internal_window);
+}
+
 void xmlx_present(t_xmlx_window *win)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, win->framebuffer->tex_id);
 	glTexImage2D(GL_TEXTURE_2D, 0,
-				win->framebuffer->type == GL_FLOAT ? GL_RGB : GL_RGBA8,
+				win->framebuffer->type == GL_FLOAT ?
+				 (win->framebuffer->format == FLOAT3 ? GL_RGB : GL_RGBA32F)
+				 : GL_RGBA8,
 				win->framebuffer->width,
 				win->framebuffer->height, 0,
-				win->framebuffer->type == GL_FLOAT ? GL_RGB : GL_BGRA,
+				win->framebuffer->type == GL_FLOAT ?
+				 (win->framebuffer->format == FLOAT3 ? GL_RGB : GL_RGBA)
+				 : GL_BGRA,
 				win->framebuffer->type,
 				win->framebuffer->buffer);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glfwSwapBuffers(win ? win->internal_window : curr_win->internal_window);
+	xmlx_draw(win);
 }
 
 void xmlx_destroy_window(t_xmlx_window *win)
 {
-	if (win)
+	if (win && !win->destroyed)
 	{
 		glfwDestroyWindow(win->internal_window);
 		free(win->framebuffer->buffer);
 		free(win->framebuffer);
 		glDeleteTextures(1, &win->framebuffer->tex_id);
+		win->destroyed = 1;
 	}
 }

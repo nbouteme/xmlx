@@ -23,11 +23,12 @@ t_mlx_ctx *xmlx_init()
 
 void xmlx_run_window(t_xmlx_window *win, t_callback cb, void *user_ptr)
 {
-	while (!glfwWindowShouldClose(win->internal_window))
+	while (!glfwWindowShouldClose(win->internal_window) && !win->stop)
 	{
 		cb(user_ptr);
 		glfwPollEvents();
 	}
+	xmlx_destroy_window(win);
 }
 
 void xmlx_destroy()
@@ -38,6 +39,7 @@ void xmlx_destroy()
 	while (i < ctx->windows->size)
 	{
 		xmlx_destroy_window(data[i]);
+		free(data[i]);
 		data[i++] = 0;
 	}
 	glDeleteShader(ctx->shader.vsh);

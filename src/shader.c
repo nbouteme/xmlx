@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 const char *vshader =
 	"#version 150\n"
 	"in vec2 position;\n"
@@ -41,12 +40,10 @@ t_shader gen_shader()
 	glGetShaderiv(ret.fsh, GL_COMPILE_STATUS, &isCompiled);
 	if (!isCompiled)
 	{
-		puts("compile frag failed");
 		GLint maxLength = 0;
 		glGetShaderiv(ret.fsh, GL_INFO_LOG_LENGTH, &maxLength);
 		char *n = calloc(1, maxLength);
 		glGetShaderInfoLog(ret.fsh, maxLength, 0, n);
-		puts(n);
 		exit(1);
 	}
 	ret.prog = glCreateProgram();
@@ -58,12 +55,10 @@ t_shader gen_shader()
 	glGetProgramiv(ret.prog, GL_LINK_STATUS, &isLinked);
 	if (!isLinked)
 	{
-		puts("linking failed");
 		GLint maxLength = 0;
 		glGetProgramiv(ret.prog, GL_INFO_LOG_LENGTH, &maxLength);
 		char *n = malloc(maxLength);
 		glGetProgramInfoLog(ret.prog, maxLength, 0, n);
-		puts(n);
 		exit(1);
 	}
 	glUseProgram(ret.prog);
@@ -72,7 +67,6 @@ t_shader gen_shader()
 	glEnableVertexAttribArray(posAttrib);
 	GLint texAttrib = glGetAttribLocation(ret.prog, "itexco");
 	glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 16, (void*)8);
-	printf("%d\n", texAttrib);
 	glEnableVertexAttribArray(texAttrib);
 	return (ret);
 }
