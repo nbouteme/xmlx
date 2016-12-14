@@ -28,6 +28,7 @@ void xmlx_run_window(t_xmlx_window *win, t_callback cb, void *user_ptr)
 		cb(user_ptr);
 		glfwPollEvents();
 	}
+	win = 1;
 	xmlx_destroy_window(win);
 }
 
